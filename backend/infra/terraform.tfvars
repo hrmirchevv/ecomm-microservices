@@ -1,0 +1,5 @@
+project_name = "backend-microservices-platform"
+environment  = "dev"
+aws_region   = "eu-north-1"
+key_name      = "new-key-pair"
+my_ip = "46.10.149.59/32"
