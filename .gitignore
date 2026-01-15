@@ -22,3 +22,10 @@ lerna-debug.log*
 # temp directory
 .temp
 .tmp
+
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.log
+

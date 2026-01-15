@@ -18,7 +18,11 @@ resource "aws_instance" "auth" {
     aws_security_group.ssh.id
   ]
 
-  user_data = file("${path.module}/user-data.sh")
+  user_data = templatefile("${path.module}/user-data.sh.tpl", {
+    customers_db_host     = aws_db_instance.customers_db.address
+    subscriptions_db_host = aws_db_instance.subscriptions_db.address
+    auth_db_host          = aws_db_instance.auth_db.address
+  })
 
   tags = {
     Name = "auth-service"
@@ -35,7 +39,11 @@ resource "aws_instance" "customers" {
     aws_security_group.ssh.id
   ]
 
-  user_data = file("${path.module}/user-data.sh")
+  user_data = templatefile("${path.module}/user-data.sh.tpl", {
+    customers_db_host     = aws_db_instance.customers_db.address
+    subscriptions_db_host = aws_db_instance.subscriptions_db.address
+    auth_db_host          = aws_db_instance.auth_db.address
+  })
 
   tags = {
     Name = "customers-service"
@@ -52,7 +60,11 @@ resource "aws_instance" "subscriptions" {
     aws_security_group.ssh.id
   ]
 
-  user_data = file("${path.module}/user-data.sh")
+  user_data = templatefile("${path.module}/user-data.sh.tpl", {
+    customers_db_host     = aws_db_instance.customers_db.address
+    subscriptions_db_host = aws_db_instance.subscriptions_db.address
+    auth_db_host          = aws_db_instance.auth_db.address
+  })
 
   tags = {
     Name = "subscriptions-service"

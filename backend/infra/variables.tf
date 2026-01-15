@@ -36,3 +36,27 @@ variable "my_ip" {
   description = "Your public IP for SSH access"
   type        = string
 }
+
+variable "db_username" {
+  description = "Master DB username"
+  type        = string
+  default     = "postres"
+}
+
+variable "db_password" {
+  description = "Master DB password"
+  type        = string
+  default     = "postgres!"
+}
+
+variable "db_engine_version" {
+  description = "Postgres engine version"
+  type        = string
+  default     = "14"
+}
+
+variable "db_instance_class" {
+  description = "RDS instance type"
+  type        = string
+  default     = "db.t3.micro"
+}
