@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CustomersService } from './customers.service';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
@@ -13,7 +22,7 @@ export class CustomersController {
     return this.service.create(dto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.service.findOne(id);
@@ -27,5 +36,14 @@ export class CustomersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.service.remove(id);
+  }
+
+  @Post('login')
+  async login(@Body('email') email: string) {
+    const customer = await this.service.findByEmail(email);
+    if (!customer) {
+      throw new NotFoundException('Invalid email');
+    }
+    return customer;
   }
 }

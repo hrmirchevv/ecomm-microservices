@@ -7,8 +7,8 @@ import {
 } from 'typeorm';
 
 export enum SubscriptionStatus {
-  ACTIVE = 'active',
-  CANCELED = 'canceled',
+  ACTIVE = 'ACTIVE',
+  CANCELED = 'CANCELED',
 }
 
 @Entity('subscriptions')

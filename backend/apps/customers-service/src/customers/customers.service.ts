@@ -38,4 +38,11 @@ export class CustomersService {
   remove(id: string) {
     return this.customerRepo.delete(id);
   }
+
+  findByEmail(email: string) {
+    return this.customerRepo.findOne({
+      where: { email },
+      relations: ['addresses'],
+    });
+  }
 }

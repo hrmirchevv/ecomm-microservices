@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import type { Customer, Subscription } from './types';
+import { Login } from './login';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [customer, setCustomer] = useState<Customer | null>(null);
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+
+  if (!customer) {
+    return <Login onLoginData={(cust, subs) => { setCustomer(cust); setSubscriptions(subs); }} />;
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <h2>Welcome, {customer.firstName} {customer.lastName}</h2>
+      <p>Email: {customer.email}</p>
+
+      <h3>Addresses:</h3>
+      <ul>
+        {customer.addresses.map(a => (
+          <li key={a.id}>{a.street}, {a.city}, {a.country}</li>
+        ))}
+      </ul>
+
+      <h3>Subscriptions:</h3>
+      <ul>
+        {subscriptions.map(s => (
+          <li key={s.id}>{s.sku} - {s.status}</li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
-export default App
+export default App;

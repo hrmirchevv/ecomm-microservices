@@ -4,6 +4,9 @@ import { CustomersModule } from './customers/customers.module';
 import { AddressesModule } from './addresses/addresses.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { SeedService } from './seed/seed.service';
+import { Address } from './addresses/address.entity';
+import { Customer } from './customers/customer.entity';
 
 @Module({
   imports: [
@@ -20,10 +23,11 @@ import { AppService } from './app.service';
         rejectUnauthorized: false,
       },
     }),
+    TypeOrmModule.forFeature([Customer, Address]),
     CustomersModule,
     AddressesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, SeedService],
 })
 export class AppModule {}

@@ -10,7 +10,7 @@ resource "aws_instance" "frontend" {
     aws_security_group.frontend.id
   ]
 
-  user_data = file("${path.module}/frontend-user-data.sh")
+  user_data = templatefile("${path.module}/frontend-user-data.sh.tpl", {})
 
   tags = {
     Name = "frontend-react"

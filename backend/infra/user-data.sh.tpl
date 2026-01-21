@@ -19,11 +19,11 @@ cd /opt/apps
 # ----------------------------------------
 # Clone backend repo
 # ----------------------------------------
-if [ ! -d "backend" ]; then
+if [ ! -d "ecomm-microservices" ]; then
   sudo -u ec2-user git clone https://github.com/hrmirchevv/ecomm-microservices.git
 fi
 
-cd /backend/apps
+cd /opt/apps/ecomm-microservices/backend/apps
 
 # ----------------------------------------
 # ENV files (generated dynamically)
@@ -60,7 +60,7 @@ EOF
 # Install & run services
 # ----------------------------------------
 for service in customers-service subscriptions-service auth-service; do
-  cd /opt/apps/backend/apps/$service
+  cd /opt/apps/ecomm-microservices/backend/apps/$service
   sudo -u ec2-user npm install
   sudo -u ec2-user npm run build
   sudo -u ec2-user pm2 start dist/main.js --name $service
