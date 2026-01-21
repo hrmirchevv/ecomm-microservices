@@ -11,7 +11,7 @@ import {
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { CustomersService } from './customers.service';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { AuthGuard } from '@nestjs/passport';
+// import { AuthGuard } from '@nestjs/passport';
 
 @Controller('customers')
 export class CustomersController {
@@ -38,12 +38,18 @@ export class CustomersController {
     return this.service.remove(id);
   }
 
-  @Post('login')
-  async login(@Body('email') email: string) {
+  @Get(':email')
+  async login(@Param('email') email: string) {
+    console.log(email);
     const customer = await this.service.findByEmail(email);
     if (!customer) {
       throw new NotFoundException('Invalid email');
     }
     return customer;
+  }
+
+  @Get('')
+  findAll() {
+    return this.service.findAll();
   }
 }

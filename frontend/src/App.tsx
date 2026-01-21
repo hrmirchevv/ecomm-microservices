@@ -11,7 +11,7 @@ function App() {
   }
 
   return (
-    <div>
+    <div style={{"marginLeft": "400px"}}>
       <h2>Welcome, {customer.firstName} {customer.lastName}</h2>
       <p>Email: {customer.email}</p>
 

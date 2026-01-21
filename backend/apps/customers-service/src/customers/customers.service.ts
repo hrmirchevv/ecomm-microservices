@@ -45,4 +45,10 @@ export class CustomersService {
       relations: ['addresses'],
     });
   }
+
+  findAll() {
+    return this.customerRepo.find({
+      relations: ['addresses'],
+    });
+  }
 }

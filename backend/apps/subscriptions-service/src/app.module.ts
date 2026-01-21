@@ -3,7 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
-import { SeedService } from './subscriptions/seed/seed.service';
+import { Subscription } from './subscriptions/subscription.entity';
+import { SeedService } from './seed/seed.service';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -20,7 +22,9 @@ import { SeedService } from './subscriptions/seed/seed.service';
         rejectUnauthorized: false,
       },
     }),
+    TypeOrmModule.forFeature([Subscription]),
     SubscriptionsModule,
+    HttpModule,
   ],
   controllers: [AppController],
   providers: [AppService, SeedService],

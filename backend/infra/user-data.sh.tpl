@@ -32,8 +32,8 @@ cd /opt/apps/ecomm-microservices/backend/apps
 cat > customers-service/.env <<EOF
 DB_HOST=${customers_db_host}
 DB_PORT=5432
-DB_USER=admin
-DB_PASSWORD=Admin123!
+DB_USER=postres
+DB_PASSWORD=postgres!
 DB_NAME=customersdb
 PORT=3000
 EOF
@@ -41,8 +41,8 @@ EOF
 cat > subscriptions-service/.env <<EOF
 DB_HOST=${subscriptions_db_host}
 DB_PORT=5432
-DB_USER=admin
-DB_PASSWORD=Admin123!
+DB_USER=postres
+DB_PASSWORD=postgres!
 DB_NAME=subscriptionsdb
 PORT=3001
 EOF
@@ -50,8 +50,8 @@ EOF
 cat > auth-service/.env <<EOF
 DB_HOST=${auth_db_host}
 DB_PORT=5432
-DB_USER=admin
-DB_PASSWORD=Admin123!
+DB_USER=postres
+DB_PASSWORD=postgres!
 DB_NAME=authdb
 PORT=3002
 EOF

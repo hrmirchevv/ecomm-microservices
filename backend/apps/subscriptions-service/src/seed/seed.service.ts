@@ -6,7 +6,7 @@ import { firstValueFrom } from 'rxjs';
 import {
   Subscription,
   SubscriptionStatus,
-} from '../../subscriptions/subscription.entity';
+} from '../subscriptions/subscription.entity';
 
 @Injectable()
 export class SeedService implements OnModuleInit {
@@ -25,7 +25,7 @@ export class SeedService implements OnModuleInit {
     const res = await firstValueFrom(
       this.http.get('http://localhost:3000/customers'),
     );
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     const customer = res.data[0];
 
     if (!customer) {

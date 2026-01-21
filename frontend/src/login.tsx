@@ -13,9 +13,9 @@ export const Login = ({ onLoginData }: LoginProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const customer: Customer = await fetchCustomerByEmail(email);
-      const subscriptions: Subscription[] = await fetchSubscriptionsByCustomer(customer.id);
-      onLoginData(customer, subscriptions);
+      const customer: Customer[] = await fetchCustomerByEmail(email);
+      const subscriptions: Subscription[] = await fetchSubscriptionsByCustomer(customer[0].id);
+      onLoginData(customer[0], subscriptions);
     } catch (err) {
       console.error(err);
       alert('Login failed: ' + (err as Error).message);
@@ -23,7 +23,7 @@ export const Login = ({ onLoginData }: LoginProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form style={{"marginLeft": "400px"}} onSubmit={handleSubmit}>
       <input
         type="email"
         placeholder="Enter your email"
