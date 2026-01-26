@@ -20,4 +20,9 @@ export class SubscriptionsController {
   cancel(@Param('id') id: string) {
     return this.service.cancel(id);
   }
+
+  @Get('test')
+  sayHi() {
+    return 'Hi!';
+  }
 }
