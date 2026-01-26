@@ -29,6 +29,47 @@ sudo -u ec2-user git clone https://github.com/hrmirchevv/ecomm-microservices.git
 # Go into frontend folder
 cd ecomm-microservices/frontend
 
+# ----------------------------------------
+# Frontend ENV (generated dynamically)
+# ----------------------------------------
+cat > .env <<EOF
+VITE_CUSTOMERS_API=/api/customers
+VITE_SUBSCRIPTIONS_API=/api/subscriptions
+VITE_AUTH_API=/api/auth
+EOF
+
+cat > /etc/nginx/conf.d/api.conf <<EOF
+server {
+    listen 80;
+    server_name _;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location / {
+        try_files \$uri /index.html;
+    }
+
+    location /api/customers/ {
+        proxy_pass http://${customers_private_ip}:3000/;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+    }
+
+    location /api/subscriptions/ {
+        proxy_pass http://${subscriptions_private_ip}:3001/;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+    }
+
+    location /api/auth/ {
+        proxy_pass http://${auth_private_ip}:3002/;
+        proxy_set_header Host \$host;
+        proxy_set_header X-Real-IP \$remote_addr;
+    }
+}
+EOF
+
 # Install dependencies and build
 sudo -u ec2-user npm install
 sudo -u ec2-user npm run build

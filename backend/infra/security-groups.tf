@@ -41,7 +41,7 @@ resource "aws_security_group" "services" {
     from_port       = 3000
     to_port         = 3000
     protocol        = "tcp"
-    security_groups = [aws_security_group.public_web.id]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
@@ -49,7 +49,7 @@ resource "aws_security_group" "services" {
     from_port       = 3001
     to_port         = 3001
     protocol        = "tcp"
-    security_groups = [aws_security_group.public_web.id]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
@@ -57,7 +57,7 @@ resource "aws_security_group" "services" {
     from_port       = 3002
     to_port         = 3002
     protocol        = "tcp"
-    security_groups = [aws_security_group.public_web.id]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -82,7 +82,7 @@ resource "aws_security_group" "db" {
     from_port       = 5432
     to_port         = 5432
     protocol        = "tcp"
-    security_groups = [aws_security_group.services.id]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
@@ -115,7 +115,7 @@ resource "aws_security_group" "ssh" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {

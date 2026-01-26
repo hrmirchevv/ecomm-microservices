@@ -1,0 +1,83 @@
+name: CI-CD-DEV
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init & Apply
+        working-directory: backend/infra
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+        run: |
+          terraform init
+          terraform apply -auto-approve
+
+      - name: Get Terraform outputs
+        id: tf
+        working-directory: backend/infra
+        run: |
+          echo "customers_ip=$(terraform output -raw customers_ec2_ip)" >> $GITHUB_OUTPUT
+          echo "subscriptions_ip=$(terraform output -raw subscriptions_ec2_ip)" >> $GITHUB_OUTPUT
+          echo "auth_ip=$(terraform output -raw auth_ec2_ip)" >> $GITHUB_OUTPUT
+          echo "frontend_ip=$(terraform output -raw frontend_ec2_ip)" >> $GITHUB_OUTPUT
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ steps.tf.outputs.customers_ip }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ steps.tf.outputs.subscriptions_ip }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ steps.tf.outputs.auth_ip }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ steps.tf.outputs.frontend_ip }} >> ~/.ssh/known_hosts
+
+      - name: Deploy backend services
+        run: |
+          for ip in \
+            ${{ steps.tf.outputs.customers_ip }} \
+            ${{ steps.tf.outputs.subscriptions_ip }} \
+            ${{ steps.tf.outputs.auth_ip }}
+          do
+            ssh ec2-user@$ip << 'EOF'
+              cd /opt/apps/ecomm-microservices
+              git pull
+              cd backend/apps
+              for service in customers-service subscriptions-service auth-service; do
+                cd $service
+                npm install
+                npm run build
+                pm2 restart $service || pm2 start dist/main.js --name $service
+                cd ..
+              done
+            EOF
+          done
+
+      - name: Deploy frontend
+        run: |
+          ssh ec2-user@${{ steps.tf.outputs.frontend_ip }} << 'EOF'
+            cd /opt/frontend/ecomm-microservices/frontend
+            git pull
+            npm install
+            npm run build
+            sudo rm -rf /usr/share/nginx/html/*
+            sudo cp -r dist/* /usr/share/nginx/html/
+            sudo systemctl restart nginx
+          EOF

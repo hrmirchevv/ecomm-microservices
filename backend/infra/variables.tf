@@ -40,13 +40,13 @@ variable "my_ip" {
 variable "db_username" {
   description = "Master DB username"
   type        = string
-  default     = "postres"
+  default     = "postgres"
 }
 
 variable "db_password" {
   description = "Master DB password"
   type        = string
-  default     = "postgres!"
+  default     = "postgres"
 }
 
 variable "db_engine_version" {

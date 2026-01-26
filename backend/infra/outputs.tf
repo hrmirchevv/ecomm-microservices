@@ -30,3 +30,18 @@ output "frontend_public_ip" {
   value = aws_instance.frontend.public_ip
 }
 
+output "frontend_url" {
+  value = "http://${aws_instance.frontend.public_dns}"
+}
+
+output "customers_public_ip" {
+  value = aws_instance.customers.public_ip
+}
+
+output "subscriptions_public_ip" {
+  value = aws_instance.subscriptions.public_ip
+}
+
+output "auth_public_ip" {
+  value = aws_instance.auth.public_ip
+}

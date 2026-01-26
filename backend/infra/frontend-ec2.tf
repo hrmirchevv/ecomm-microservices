@@ -10,7 +10,11 @@ resource "aws_instance" "frontend" {
     aws_security_group.frontend.id
   ]
 
-  user_data = templatefile("${path.module}/frontend-user-data.sh.tpl", {})
+  user_data = templatefile("${path.module}/frontend-user-data.sh.tpl", {
+    customers_private_ip     = aws_instance.customers.public_ip
+    subscriptions_private_ip = aws_instance.subscriptions.public_ip
+    auth_private_ip = aws_instance.auth.public_ip
+  })
 
   tags = {
     Name = "frontend-react"
