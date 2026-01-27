@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -34,10 +34,31 @@ jobs:
         id: tf
         working-directory: backend/infra
         run: |
-          echo "customers_ip=$(terraform output -raw customers_ec2_ip)" >> $GITHUB_OUTPUT
-          echo "subscriptions_ip=$(terraform output -raw subscriptions_ec2_ip)" >> $GITHUB_OUTPUT
-          echo "auth_ip=$(terraform output -raw auth_ec2_ip)" >> $GITHUB_OUTPUT
-          echo "frontend_ip=$(terraform output -raw frontend_ec2_ip)" >> $GITHUB_OUTPUT
+          echo "customers_ip=$(terraform output -raw customers_private_ip)" >> $GITHUB_OUTPUT
+          echo "subscriptions_ip=$(terraform output -raw subscriptions_private_ip)" >> $GITHUB_OUTPUT
+          echo "auth_ip=$(terraform output -raw auth_private_ip)" >> $GITHUB_OUTPUT
+          echo "frontend_ip=$(terraform output -raw frontend_public_ip)" >> $GITHUB_OUTPUT
+
+      - name: Debug Terraform outputs
+        run: |
+          echo "customers_ip=${{ steps.tf.outputs.customers_ip }}"
+          echo "subscriptions_ip=${{ steps.tf.outputs.subscriptions_ip }}"
+          echo "auth_ip=${{ steps.tf.outputs.auth_ip }}"
+          echo "frontend_ip=${{ steps.tf.outputs.frontend_ip }}"
+
+      - name: Validate IPs
+        run: |
+          for ip in \
+            "${{ steps.tf.outputs.customers_ip }}" \
+            "${{ steps.tf.outputs.subscriptions_ip }}" \
+            "${{ steps.tf.outputs.auth_ip }}" \
+            "${{ steps.tf.outputs.frontend_ip }}"
+          do
+            if [ -z "$ip" ]; then
+              echo "❌ Missing Terraform output IP"
+              exit 1
+            fi
+          done
 
       - name: Setup SSH
         run: |
@@ -64,7 +85,7 @@ jobs:
                 cd $service
                 npm install
                 npm run build
-                pm2 restart $service || pm2 start dist/main.js --name $service
+                pm2 restart $service --update-env || pm2 start dist/main.js --name $service
                 cd ..
               done
             EOF
