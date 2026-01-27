@@ -38,6 +38,7 @@ jobs:
           echo "subscriptions_ip=$(terraform output -raw subscriptions_public_ip)" >> $GITHUB_OUTPUT
           echo "auth_ip=$(terraform output -raw auth_public_ip)" >> $GITHUB_OUTPUT
           echo "frontend_ip=$(terraform output -raw frontend_public_ip)" >> $GITHUB_OUTPUT
+          echo "frontend_url=$(terraform output -raw frontend_url)" >> $GITHUB_OUTPUT
 
       - name: Debug Terraform outputs
         run: |
@@ -45,6 +46,7 @@ jobs:
           echo "subscriptions_ip=${{ steps.tf.outputs.subscriptions_ip }}"
           echo "auth_ip=${{ steps.tf.outputs.auth_ip }}"
           echo "frontend_ip=${{ steps.tf.outputs.frontend_ip }}"
+          echo "frontend_url=${{ steps.tf.outputs.frontend_url }}"
 
       - name: Validate IPs
         run: |
