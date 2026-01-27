@@ -39,6 +39,7 @@ jobs:
           echo "auth_ip=$(terraform output -raw auth_public_ip)" >> $GITHUB_OUTPUT
           echo "frontend_ip=$(terraform output -raw frontend_public_ip)" >> $GITHUB_OUTPUT
           echo "frontend_url=$(terraform output -raw frontend_url)" >> $GITHUB_OUTPUT
+          echo "alb_dns_name=$(terraform output -raw alb_dns_name)" >> $GITHUB_OUTPUT
 
       - name: Debug Terraform outputs
         run: |
@@ -47,6 +48,7 @@ jobs:
           echo "auth_ip=${{ steps.tf.outputs.auth_ip }}"
           echo "frontend_ip=${{ steps.tf.outputs.frontend_ip }}"
           echo "frontend_url=${{ steps.tf.outputs.frontend_url }}"
+          echo "alb_dns_name=${{ steps.tf.outputs.alb_dns_name }}"
 
       - name: Validate IPs
         run: |
@@ -87,7 +89,7 @@ jobs:
               cd $service
               npm install
               npm run build
-              pm2 restart $service --update-env || pm2 start dist/main.js --name $service
+              pm2 start dist/main.js --name $service --update-env || true
               cd ..
           done
           EOF
@@ -99,6 +101,12 @@ jobs:
           ssh ec2-user@${{ steps.tf.outputs.frontend_ip }} << 'EOF'
             cd /opt/frontend/ecomm-microservices/frontend
             git pull
+            # update .env
+            cat > .env <<EOF
+            VITE_CUSTOMERS_API=http://${{ steps.tf.outputs.alb_dns_name }}
+            VITE_SUBSCRIPTIONS_API=http://${{ steps.tf.outputs.alb_dns_name }}
+            VITE_AUTH_API=http://${{ steps.tf.outputs.alb_dns_name }}
+            EOF
             npm install
             npm run build
             sudo rm -rf /usr/share/nginx/html/*

@@ -33,9 +33,9 @@ cd ecomm-microservices/frontend
 # Frontend ENV (generated dynamically)
 # ----------------------------------------
 cat > .env <<EOF
-VITE_CUSTOMERS_API=/api/customers
-VITE_SUBSCRIPTIONS_API=/api/subscriptions
-VITE_AUTH_API=/api/auth
+VITE_CUSTOMERS_API=http://${alb_dns_name}
+VITE_SUBSCRIPTIONS_API=http://${alb_dns_name}
+VITE_AUTH_API=http://${alb_dns_name}
 EOF
 
 cat > /etc/nginx/conf.d/api.conf <<EOF
@@ -48,24 +48,6 @@ server {
 
     location / {
         try_files \$uri /index.html;
-    }
-
-    location /api/customers/ {
-        proxy_pass http://${customers_private_ip}:3000/;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-    }
-
-    location /api/subscriptions/ {
-        proxy_pass http://${subscriptions_private_ip}:3001/;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-    }
-
-    location /api/auth/ {
-        proxy_pass http://${auth_private_ip}:3002/;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
     }
 }
 EOF

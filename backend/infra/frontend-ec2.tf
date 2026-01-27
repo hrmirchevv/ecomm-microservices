@@ -11,9 +11,7 @@ resource "aws_instance" "frontend" {
   ]
 
   user_data = templatefile("${path.module}/frontend-user-data.sh.tpl", {
-    customers_private_ip     = aws_instance.customers.public_ip
-    subscriptions_private_ip = aws_instance.subscriptions.public_ip
-    auth_private_ip = aws_instance.auth.public_ip
+    alb_dns_name = aws_lb.app.dns_name
   })
 
   tags = {

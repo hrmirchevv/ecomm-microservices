@@ -45,3 +45,24 @@ output "subscriptions_public_ip" {
 output "auth_public_ip" {
   value = aws_instance.auth.public_ip
 }
+
+output "frontend_url_dns" {
+  value = "http://${aws_instance.frontend.public_dns}"
+}
+
+output "auth_url" {
+  value = "http://${aws_lb.app.dns_name}/auth"
+}
+
+output "customers_url" {
+  value = "http://${aws_lb.app.dns_name}/customers"
+}
+
+output "subscriptions_url" {
+  value = "http://${aws_lb.app.dns_name}/subscriptions"
+}
+
+output "alb_dns_name" {
+  description = "Public DNS name of the frontend ALB"
+  value       = aws_lb.app.dns_name
+}
