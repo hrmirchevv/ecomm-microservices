@@ -16,7 +16,7 @@ resource "aws_security_group" "frontend" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["46.10.149.59/32"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
