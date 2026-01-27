@@ -34,9 +34,9 @@ jobs:
         id: tf
         working-directory: backend/infra
         run: |
-          echo "customers_ip=$(terraform output -raw customers_private_ip)" >> $GITHUB_OUTPUT
-          echo "subscriptions_ip=$(terraform output -raw subscriptions_private_ip)" >> $GITHUB_OUTPUT
-          echo "auth_ip=$(terraform output -raw auth_private_ip)" >> $GITHUB_OUTPUT
+          echo "customers_ip=$(terraform output -raw customers_public_ip)" >> $GITHUB_OUTPUT
+          echo "subscriptions_ip=$(terraform output -raw subscriptions_public_ip)" >> $GITHUB_OUTPUT
+          echo "auth_ip=$(terraform output -raw auth_public_ip)" >> $GITHUB_OUTPUT
           echo "frontend_ip=$(terraform output -raw frontend_public_ip)" >> $GITHUB_OUTPUT
 
       - name: Debug Terraform outputs
