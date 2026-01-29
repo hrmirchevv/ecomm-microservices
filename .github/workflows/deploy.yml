@@ -36,7 +36,6 @@ jobs:
         run: |
           echo "customers_ip=$(terraform output -raw customers_public_ip)" >> $GITHUB_OUTPUT
           echo "subscriptions_ip=$(terraform output -raw subscriptions_public_ip)" >> $GITHUB_OUTPUT
-          echo "auth_ip=$(terraform output -raw auth_public_ip)" >> $GITHUB_OUTPUT
           echo "frontend_ip=$(terraform output -raw frontend_public_ip)" >> $GITHUB_OUTPUT
           echo "frontend_url=$(terraform output -raw frontend_url)" >> $GITHUB_OUTPUT
           echo "alb_dns_name=$(terraform output -raw alb_dns_name)" >> $GITHUB_OUTPUT
@@ -45,7 +44,6 @@ jobs:
         run: |
           echo "customers_ip=${{ steps.tf.outputs.customers_ip }}"
           echo "subscriptions_ip=${{ steps.tf.outputs.subscriptions_ip }}"
-          echo "auth_ip=${{ steps.tf.outputs.auth_ip }}"
           echo "frontend_ip=${{ steps.tf.outputs.frontend_ip }}"
           echo "frontend_url=${{ steps.tf.outputs.frontend_url }}"
           echo "alb_dns_name=${{ steps.tf.outputs.alb_dns_name }}"
@@ -55,7 +53,6 @@ jobs:
           for ip in \
             "${{ steps.tf.outputs.customers_ip }}" \
             "${{ steps.tf.outputs.subscriptions_ip }}" \
-            "${{ steps.tf.outputs.auth_ip }}" \
             "${{ steps.tf.outputs.frontend_ip }}"
           do
             if [ -z "$ip" ]; then
@@ -71,7 +68,6 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ steps.tf.outputs.customers_ip }} >> ~/.ssh/known_hosts || true
           ssh-keyscan -H ${{ steps.tf.outputs.subscriptions_ip }} >> ~/.ssh/known_hosts || true
-          ssh-keyscan -H ${{ steps.tf.outputs.auth_ip }} >> ~/.ssh/known_hosts || true
           ssh-keyscan -H ${{ steps.tf.outputs.frontend_ip }} >> ~/.ssh/known_hosts || true
 
       - name: Deploy backend services
@@ -104,7 +100,6 @@ jobs:
             cat > .env <<EOF
             VITE_CUSTOMERS_API=http://${{ steps.tf.outputs.alb_dns_name }}
             VITE_SUBSCRIPTIONS_API=http://${{ steps.tf.outputs.alb_dns_name }}
-            VITE_AUTH_API=http://${{ steps.tf.outputs.alb_dns_name }}
             EOF
             npm install
             npm run build
