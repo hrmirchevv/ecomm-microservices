@@ -35,7 +35,7 @@ export const Login = ({ onLoginData }: LoginProps) => {
 
   return (
   <div>
-    <h1>${cicd}</h1>
+    <h1>{cicd}</h1>
     <form style={{"marginLeft": "400px"}} onSubmit={handleCICD}>  
       <button type="submit">CI/CD</button>
     </form>

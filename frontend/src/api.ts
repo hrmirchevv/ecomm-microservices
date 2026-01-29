@@ -17,5 +17,5 @@ export const hiCICD = async () => {
   const url = `${import.meta.env.VITE_SUBSCRIPTIONS_API}/subscriptions/test`;
   const res = await fetch(url);
   if (!res.ok) throw new Error('Failed to fetch test ctrl!');
-  return res.json();
+  return res;
 };
