@@ -35,7 +35,6 @@ cd ecomm-microservices/frontend
 cat > .env <<EOF
 VITE_CUSTOMERS_API=http://${alb_dns_name}
 VITE_SUBSCRIPTIONS_API=http://${alb_dns_name}
-VITE_AUTH_API=http://${alb_dns_name}
 EOF
 
 cat > /etc/nginx/conf.d/api.conf <<EOF

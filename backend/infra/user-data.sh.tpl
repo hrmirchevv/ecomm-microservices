@@ -47,19 +47,10 @@ DB_NAME=subscriptionsdb
 PORT=3001
 EOF
 
-cat > auth-service/.env <<EOF
-DB_HOST=${auth_db_host}
-DB_PORT=5432
-DB_USER=postgres
-DB_PASS=postgres
-DB_NAME=authdb
-PORT=3002
-EOF
-
 # ----------------------------------------
 # Install & run services
 # ----------------------------------------
-for service in customers-service subscriptions-service auth-service; do
+for service in customers-service subscriptions-service; do
   cd /opt/apps/ecomm-microservices/backend/apps/$service
   sudo -u ec2-user npm install
   sudo -u ec2-user npm run build

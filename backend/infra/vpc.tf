@@ -103,12 +103,12 @@ resource "aws_lb" "app" {
   security_groups    = [aws_security_group.alb.id]
 }
 
-resource "aws_lb_target_group" "auth" {
-  name     = "auth-tg"
-  port     = 3002
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.this.id
-}
+# resource "aws_lb_target_group" "auth" {
+#   name     = "auth-tg"
+#   port     = 3002
+#   protocol = "HTTP"
+#   vpc_id   = aws_vpc.this.id
+# }
 
 resource "aws_lb_target_group" "customers" {
   name     = "customers-tg"
@@ -157,17 +157,17 @@ resource "aws_lb_listener" "http" {
   }
 }
 
-resource "aws_lb_listener_rule" "auth_rule" {
-  listener_arn = aws_lb_listener.http.arn
-  priority     = 1
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.auth.arn
-  }
-  condition {
-    path_pattern { values = ["/auth", "/auth/*"] }
-  }
-}
+# resource "aws_lb_listener_rule" "auth_rule" {
+#   listener_arn = aws_lb_listener.http.arn
+#   priority     = 1
+#   action {
+#     type             = "forward"
+#     target_group_arn = aws_lb_target_group.auth.arn
+#   }
+#   condition {
+#     path_pattern { values = ["/auth", "/auth/*"] }
+#   }
+# }
 
 resource "aws_lb_listener_rule" "customers_rule" {
   listener_arn = aws_lb_listener.http.arn
@@ -194,11 +194,11 @@ resource "aws_lb_listener_rule" "subscriptions_rule" {
 }
 
 # Attach EC2 backend instances to the target groupsye
-resource "aws_lb_target_group_attachment" "auth" {
-  target_group_arn = aws_lb_target_group.auth.arn
-  target_id        = aws_instance.auth.id
-  port             = 3002
-}
+# resource "aws_lb_target_group_attachment" "auth" {
+#   target_group_arn = aws_lb_target_group.auth.arn
+#   target_id        = aws_instance.auth.id
+#   port             = 3002
+# }
 
 resource "aws_lb_target_group_attachment" "customers" {
   target_group_arn = aws_lb_target_group.customers.arn

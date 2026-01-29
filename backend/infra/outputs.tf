@@ -2,10 +2,6 @@ output "project" {
   value = var.project_name
 }
 
-output "auth_private_ip" {
-  value = aws_instance.auth.private_ip
-}
-
 output "customers_private_ip" {
   value = aws_instance.customers.private_ip
 }
@@ -20,10 +16,6 @@ output "customers_db_host" {
 
 output "subscriptions_db_host" {
   value = aws_db_instance.subscriptions_db.address
-}
-
-output "auth_db_host" {
-  value = aws_db_instance.auth_db.address
 }
 
 output "frontend_public_ip" {
@@ -42,16 +34,8 @@ output "subscriptions_public_ip" {
   value = aws_instance.subscriptions.public_ip
 }
 
-output "auth_public_ip" {
-  value = aws_instance.auth.public_ip
-}
-
 output "frontend_url_dns" {
   value = "http://${aws_instance.frontend.public_dns}"
-}
-
-output "auth_url" {
-  value = "http://${aws_lb.app.dns_name}/auth"
 }
 
 output "customers_url" {
