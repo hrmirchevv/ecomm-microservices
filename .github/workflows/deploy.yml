@@ -79,13 +79,12 @@ jobs:
           for ip in \
             ${{ steps.tf.outputs.customers_ip }} \
             ${{ steps.tf.outputs.subscriptions_ip }} \
-            ${{ steps.tf.outputs.auth_ip }}
           do
             ssh ec2-user@$ip <<'EOF'
             cd /opt/apps/ecomm-microservices
             git pull
             cd backend/apps
-            for service in customers-service subscriptions-service auth-service; do
+            for service in customers-service subscriptions-service; do
               cd $service
               npm install
               npm run build
