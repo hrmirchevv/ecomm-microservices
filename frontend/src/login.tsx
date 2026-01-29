@@ -1,6 +1,6 @@
 // src/Login.tsx
 import { useState } from 'react';
-import { fetchCustomerByEmail, fetchSubscriptionsByCustomer } from './api';
+import { fetchCustomerByEmail, fetchSubscriptionsByCustomer, hiCICD } from './api';
 import type { Customer, Subscription } from './types';
 
 interface LoginProps {
@@ -9,6 +9,7 @@ interface LoginProps {
 
 export const Login = ({ onLoginData }: LoginProps) => {
   const [email, setEmail] = useState('');
+  const [cicd, setcicd] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +23,23 @@ export const Login = ({ onLoginData }: LoginProps) => {
     }
   };
 
+  const handleCICD = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await hiCICD();
+      setcicd(res);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   return (
+  <div>
+    <h1>${cicd}</h1>
+    <form style={{"marginLeft": "400px"}} onSubmit={handleCICD}>  
+      <button type="submit">CI/CD</button>
+    </form>
+    _____________________________________________________________________
     <form style={{"marginLeft": "400px"}} onSubmit={handleSubmit}>
       <input
         type="email"
@@ -33,5 +50,6 @@ export const Login = ({ onLoginData }: LoginProps) => {
       />
       <button type="submit">Login</button>
     </form>
+  </div>
   );
 };
