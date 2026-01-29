@@ -93,17 +93,18 @@ jobs:
 
       - name: Deploy frontend
         run: |
-          ssh ec2-user@${{ steps.tf.outputs.frontend_ip }} << 'EOF'
-            cd /opt/frontend/ecomm-microservices/frontend
-            git pull
-            # update .env
-            cat > .env <<EOF
-            VITE_CUSTOMERS_API=http://${{ steps.tf.outputs.alb_dns_name }}
-            VITE_SUBSCRIPTIONS_API=http://${{ steps.tf.outputs.alb_dns_name }}
-            EOF
-            npm install
-            npm run build
-            sudo rm -rf /usr/share/nginx/html/*
-            sudo cp -r dist/* /usr/share/nginx/html/
-            sudo systemctl restart nginx
-          EOF
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ steps.tf.outputs.frontend_ip }} 'bash -s' <<'ENDSSH'
+          cd /opt/frontend/ecomm-microservices/frontend
+          git pull
+
+          echo "VITE_CUSTOMERS_API=http://${{ steps.tf.outputs.alb_dns_name }}" | sudo tee .env
+          echo "VITE_SUBSCRIPTIONS_API=http://${{ steps.tf.outputs.alb_dns_name }}" | sudo tee -a .env
+
+          npm install
+          npm run build
+
+          # Deploy to nginx
+          sudo rm -rf /usr/share/nginx/html/*
+          sudo cp -r dist/* /usr/share/nginx/html/
+          sudo systemctl restart nginx
+          ENDSSH
