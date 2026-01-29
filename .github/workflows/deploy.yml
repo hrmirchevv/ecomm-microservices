@@ -78,7 +78,7 @@ jobs:
         run: |
           for ip in \
             ${{ steps.tf.outputs.customers_ip }} \
-            ${{ steps.tf.outputs.subscriptions_ip }} \
+            ${{ steps.tf.outputs.subscriptions_ip }}
           do
             ssh ec2-user@$ip <<'EOF'
             cd /opt/apps/ecomm-microservices
